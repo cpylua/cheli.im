@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "noImplicitAny": false,
+    "removeComments": true,
+    "charset": "utf-8",
+    "jsx": "react",
+    "listFiles": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "target": "es5",
+    "noLib": true,
+    "outDir": "./lib"
+  },
+  "compileOnSave": true,
+  "filesGlob": [
+    "src/**/*.ts"
+  ],
+  "files": [
+    "src/archives.ts",
+    "src/index.ts",
+    "src/minify-html.ts",
+    "src/post.ts",
+    "src/renderMarkdown.ts",
+    "src/renderStatic.ts",
+    "src/site.ts",
+    "src/styles.ts",
+    "src/typings.d.ts"
+  ],
+  "atom": {
+    "rewriteTsconfig": true
+  }
+}

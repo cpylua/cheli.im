@@ -1,0 +1,26 @@
+@import './variables';
+@import './common';
+@import '../node_modules/octicons/octicons/octicons.scss';
+@import '../node_modules/primer-markdown/components/user-content';
+
+.post {
+  margin-top: $section-margin;
+  padding: 0 45px;
+
+  .markdown-body {
+    word-wrap: break-word;
+  }
+}
+
+.post-info {
+  font-size: 13px;
+  color: $color-gray-light;
+  margin-top: 48px;
+  text-align: right;
+}
+
+.post-eof {
+  margin: 25px 0;
+  height: 1px;
+  background: linear-gradient(to right, $color-bg-gray, $color-gray 50%, $color-bg-gray);
+}

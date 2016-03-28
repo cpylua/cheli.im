@@ -1,0 +1,44 @@
+// WARNING: this file generates styles, so DO NOT import multiple times
+//
+@import './variables';
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font: sans-serif;
+  height: 100%;
+  background: $color-white;
+}
+
+body {
+  width: $page-width;
+  margin: 0 auto;
+  font: 16px / 1.4 Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  color: $color-default;
+  height: 100%;
+}
+
+a {
+  color: $color-blue;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.footer {
+  font-size: 13px;
+  margin-bottom: $section-margin;
+  text-align: center;
+
+  .ft-link {
+    color: $color-gray;
+
+    &:not(:last-child) {
+      margin-right: 8px;
+    }
+  }
+}

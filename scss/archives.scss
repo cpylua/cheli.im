@@ -1,0 +1,28 @@
+@import './variables';
+@import './common';
+
+.title {
+  font-size: 24px;
+  margin-bottom: $section-margin;
+  padding-left: 8px;
+  margin-top: $section-margin;
+  border-left: 3px solid $color-gray-light;
+  text-transform: uppercase;
+}
+
+.archives {
+  font-size: 16px;
+  margin-bottom: $section-margin;
+
+  .archive-link {
+    display: block;
+
+    &:not(:first-child) {
+      margin-top: 8px;
+    }
+  }
+}
+
+.footer {
+  text-align: left;
+}
