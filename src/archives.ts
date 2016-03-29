@@ -12,6 +12,11 @@ export function add(post: PostMetaData): void {
     return;
   }
 
+  // Do not generate index for error pages
+  if (['404', '50x'].indexOf(post.title) !== -1) {
+    return;
+  }
+
   posts.push(post);
 }
 
