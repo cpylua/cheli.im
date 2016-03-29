@@ -11,15 +11,20 @@
 }
 
 .archives {
-  font-size: 16px;
   margin-bottom: $section-margin;
 
   .archive-link {
-    display: block;
-
+    font-size: 16px;
+    
     &:not(:first-child) {
       margin-top: 8px;
     }
+  }
+
+  .archive-date {
+    margin-left: 4px;
+    color: $color-gray;
+    font-size: 14px;
   }
 }
 

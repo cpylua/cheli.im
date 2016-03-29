@@ -4,3 +4,4 @@ public
 config.json
 lib
 typings
+deploy.sh

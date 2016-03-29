@@ -48,7 +48,10 @@ function renderArchive(archives: PostMetaData[]): string {
 
 function renderArchiveItem(post: PostMetaData): string {
   return `
-<a href="post/${post.url}" class="archive-link">${post.title}</a>
+<div class="post">
+  <a href="post/${post.url}" class="archive-link">${post.title}</a>
+  <span class="archive-date">${post.date}</span>
+</div>
 `;
 }
 
