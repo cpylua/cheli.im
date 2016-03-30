@@ -1,0 +1,2 @@
+- [x] Responsive design
+- Incremental site generation

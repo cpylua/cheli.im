@@ -13,11 +13,25 @@ html {
 }
 
 body {
-  width: $page-width;
+  max-width: $page-max-width;
+  min-width: $page-min-width;
+  width: 100%;
   margin: 0 auto;
   font: 16px / 1.4 Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   color: $color-default;
   height: 100%;
+}
+
+@media screen and (min-width: $small-page-paddding-width) {
+  body {
+    padding: 0 $page-padding;
+  }
+}
+
+@media screen and (max-width: $small-page-paddding-width) {
+  body {
+    padding: 0 $page-small-padding;
+  }
 }
 
 a {
@@ -31,7 +45,7 @@ a {
 
 .footer {
   font-size: 13px;
-  margin-bottom: $section-margin;
+  padding-bottom: $section-margin;
   text-align: center;
 
   .ft-link {

@@ -5,15 +5,16 @@ import * as fs from 'fs';
 import * as statics from './renderStatic';
 import {minifyHtml} from './minify-html';
 
- const posts: PostMetaData[] = [];
+const posts: PostMetaData[] = [];
+const blacklist = ['404', '50x', 'about'];
 
 export function add(post: PostMetaData): void {
   if (post.draft) {
     return;
   }
 
-  // Do not generate index for error pages
-  if (['404', '50x'].indexOf(post.title) !== -1) {
+  // Do not generate index for pages in blacklist
+  if (blacklist.indexOf(post.title) !== -1) {
     return;
   }
 

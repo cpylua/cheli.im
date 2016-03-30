@@ -17,7 +17,7 @@ export function renderHeader(config: HeaderConfig): string {
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Language" content="en">
-    <meta name="viewport" content="width=1020">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     ${resources ? resources : ''}
     <title>${title}</title>
   </head>
