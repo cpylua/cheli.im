@@ -7,6 +7,7 @@ import * as fs from 'fs';
 import {render} from './post';
 import * as archives from './archives';
 import {minifyHtml} from './minify-html';
+import * as checksum from './checksum';
 const globalConfig = require('../config.json');
 
 interface BuildConfig {
@@ -19,36 +20,49 @@ export function build(config: BuildConfig): void {
   const posts = path.join(src, '**/*.@(md|ft)');
   const postMetadata: PostMetaData[] = [];
 
-  glob(posts, (err, markdownFiles) => {
-    markdownFiles.forEach((file, i) => {
-      fs.readFile(file, (readError, data) => {
-        if (readError) {
-          return console.error(`failed to read post: ${file}: ${readError}`);
-        }
+  checksum.load(src)
+    .then(checksumMap => {
+      glob(posts, (err, markdownFiles) => {
+        markdownFiles.forEach((file, i) => {
+          fs.readFile(file, (readError, data) => {
+            try {
+              if (readError) {
+                return console.error(`failed to read post: ${file}: ${readError}`);
+              }
 
-        const content = data.toString();
-        const meta = parseFileMetaData(content);
-        if (!meta) {
-          return console.log(`failed to parse meta data for post ${file}`);
-        }
+              const content = data.toString();
+              const basename = path.basename(file);
+              if (!checksum.update(checksumMap, basename, content)) {
+                return console.log(`[unchanged] ${file}`);
+              }
 
-        postMetadata.push(meta);
-        archives.add(meta);
+              const meta = parseFileMetaData(content);
+              if (!meta) {
+                return console.log(`failed to parse meta data for post ${file}`);
+              }
 
-        // read all meta data first, then render
-        if (i === markdownFiles.length - 1) {
-          archives.buildIndex(out);
-          postMetadata.forEach(postMeta => compileFile(postMeta, out));
-        }
+              postMetadata.push(meta);
+              archives.add(meta);
+            } finally {
+              // read all meta data first, then render
+              if (i === markdownFiles.length - 1) {
+                archives.buildIndex(out);
+                postMetadata.forEach(postMeta => compileFile(postMeta, out));
+                checksum.save(checksumMap, src);
+              }
+            }
+          });
+        });
       });
+    })
+    .catch(error => {
+      console.error(error);
     });
-  });
 }
 
 function compileFile(post: PostMetaData, out: string): void {
-  const {title} = post;
   if (post.draft) {
-    return console.log(`[draft]:[skipped]: ${title}`);
+    return removeDraft(post, out);
   }
 
   render(post, {token: globalConfig.token})
@@ -97,4 +111,21 @@ function parseFileMetaData(fileContent: string): PostMetaData {
 
 function titleToUrl(title: string) {
   return title.replace(/[^A-Za-z0-9-]/gi, '-').toLowerCase();
+}
+
+function removeDraft(post: PostMetaData, out: string): void {
+  const draftFile = path.join(out, 'post', `${post.url}.html`);
+  fs.stat(draftFile, (err, stats) => {
+    if (!err && stats.isFile()) {
+      fs.unlink(draftFile, unlinkError => {
+        if (unlinkError) {
+          return console.error(`failed to remove draft file: ${draftFile}`);
+        }
+
+        return console.log(`[draft]:[removed]: ${post.title}`);
+      });
+    } else {
+      return console.log(`[draft]:[skipped]: ${post.title}`);
+    }
+  });
 }

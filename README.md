@@ -80,6 +80,20 @@ public
 
 Styles are written in `scss`. Markdown styling and icons are from github.
 
+Meta data in post file: `title`, `date`, `updated`, `draft`.
+
+```
+"title": "About Me"
+"date": "2012-10-15"
+"updated": "2015-10-28"
+"draft": true
+;;;
+
+// the line with `;;;` is required to mark the end of meta data.
+```
+
+Mark a file as draft will remove it from public directory.
+
 Customize
 -----
 

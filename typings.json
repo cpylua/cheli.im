@@ -1,5 +1,6 @@
 {
   "ambientDependencies": {
+    "checksum": "registry:dt/checksum#0.1.1+20160317120654",
     "clean-css": "registry:dt/clean-css#3.4.9+20160316155526",
     "glob": "registry:dt/glob#5.0.10+20160317120654",
     "html-minifier": "registry:dt/html-minifier#1.1.1+20160316155526",

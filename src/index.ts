@@ -13,7 +13,7 @@ function main() {
   const cssDir = path.join(out, 'css');
   const postDir = path.join(out, 'post');
 
-  rimraf(out, err => {
+  rimraf(path.join(out, 'css'), err => {
     if (err) {
       return console.log(err);
     }
