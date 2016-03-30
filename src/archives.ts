@@ -14,7 +14,7 @@ export function add(post: PostMetaData): void {
   }
 
   // Do not generate index for pages in blacklist
-  if (blacklist.indexOf(post.title) !== -1) {
+  if (blacklist.indexOf(post.url) !== -1) {
     return;
   }
 

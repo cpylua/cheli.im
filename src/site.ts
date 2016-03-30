@@ -31,18 +31,18 @@ export function build(config: BuildConfig): void {
               }
 
               const content = data.toString();
-              const basename = path.basename(file);
-              if (!checksum.update(checksumMap, basename, content)) {
-                return console.log(`[unchanged] ${file}`);
-              }
-
               const meta = parseFileMetaData(content);
               if (!meta) {
                 return console.log(`failed to parse meta data for post ${file}`);
               }
 
-              postMetadata.push(meta);
               archives.add(meta);
+
+              const basename = path.basename(file);
+              if (!checksum.update(checksumMap, basename, content)) {
+                return console.log(`[unchanged] ${file}`);
+              }
+              postMetadata.push(meta);
             } finally {
               // read all meta data first, then render
               if (i === markdownFiles.length - 1) {
