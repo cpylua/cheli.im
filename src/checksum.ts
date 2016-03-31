@@ -6,14 +6,10 @@ import * as path from 'path';
 
 const appConfig = require('../config.json');
 
-const checksumFileName = `.posts_checksum_${appConfig.public}`;
+const checksumFileName = `.resource_checksum_${appConfig.public}`;
 
-interface CheckSumMap {
-  [filename: string]: string;
-}
-
-export function load(postPath: string): Promise<CheckSumMap> {
-  const filename = path.join(postPath, checksumFileName);
+export function load(resPath: string): Promise<CheckSumMap> {
+  const filename = path.join(resPath, checksumFileName);
 
   return new Promise((resolve, reject) => {
     fs.stat(filename, (err, stats) => {
@@ -41,8 +37,8 @@ export function load(postPath: string): Promise<CheckSumMap> {
   });
 }
 
-export function save(checksums: CheckSumMap, postPath: string): void {
-  const filename = path.join(postPath, checksumFileName);
+export function save(checksums: CheckSumMap, resPath: string): void {
+  const filename = path.join(resPath, checksumFileName);
 
   try {
     const checksumString = JSON.stringify(checksums);

@@ -1,6 +1,8 @@
 Static site generator for [cheli.im](http://cheli.im)
 ====
 
+Self hosted github `README`s with incremental build.
+
 Why
 -----
 
@@ -93,6 +95,9 @@ Meta data in post file: `title`, `date`, `updated`, `draft`.
 ```
 
 Mark a file as draft will remove it from public directory.
+
+If incremental build is not working properly, try remove `.resource_checksum_****`
+files in `scss` folder and your post source directory.
 
 Customize
 -----

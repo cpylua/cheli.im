@@ -4,6 +4,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as statics from './renderStatic';
 import {minifyHtml} from './minify-html';
+import checksum = require('checksum');
 
 const posts: PostMetaData[] = [];
 const blacklist = ['404', '50x', 'about'];
@@ -26,18 +27,27 @@ export function buildIndex(out: string): void {
   const styles = '<link rel="stylesheet" href="css/archives.css" />';
   const indexContent = `
 ${statics.renderHeader({
-  title: 'archives',
+  title: 'thoughts & notes',
   resources: styles
 })}
 ${renderArchive(posts)}
 ${statics.renderFooter({noArchiveLink: true})}
 `;
 
-  console.log(`[archive]: ${indexFile}`);
-  fs.writeFile(indexFile, minifyHtml(indexContent), err => {
-    if (err) {
-      return console.log(`failed to build archive index: ${err}`);
+  checksum.file(indexFile, (checkSumError, sum) => {
+    const newIndexContent = minifyHtml(indexContent);
+    const newSum = checksum(newIndexContent);
+
+    if (sum === newSum) {
+      return console.log(`[unchanged]:${path.basename(indexFile)}`);
     }
+
+    console.log(`[archive]:${indexFile}`);
+    fs.writeFile(indexFile, newIndexContent, err => {
+      if (err) {
+        return console.log(`failed to build archive index: ${err}`);
+      }
+    });
   });
 }
 

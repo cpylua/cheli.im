@@ -40,7 +40,7 @@ export function build(config: BuildConfig): void {
 
               const basename = path.basename(file);
               if (!checksum.update(checksumMap, basename, content)) {
-                return console.log(`[unchanged] ${file}`);
+                return console.log(`[unchanged]:${meta.title}`);
               }
               postMetadata.push(meta);
             } finally {
@@ -122,10 +122,10 @@ function removeDraft(post: PostMetaData, out: string): void {
           return console.error(`failed to remove draft file: ${draftFile}`);
         }
 
-        return console.log(`[draft]:[removed]: ${post.title}`);
+        return console.log(`[draft]:[removed]:${post.title}`);
       });
     } else {
-      return console.log(`[draft]:[skipped]: ${post.title}`);
+      return console.log(`[draft]:[skipped]:${post.title}`);
     }
   });
 }

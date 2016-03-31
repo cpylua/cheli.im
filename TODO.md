@@ -1,2 +1,3 @@
 - [x] Responsive design
 - [x] Incremental site generation
+- [x] Incremental build for styles and index file

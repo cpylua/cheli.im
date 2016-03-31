@@ -8,6 +8,8 @@ import * as postcss from 'postcss';
 import * as autoprefixer from 'autoprefixer';
 import * as cssnano from 'cssnano';
 import {ncp} from 'ncp';
+import * as resourceChecksum from './checksum';
+import checksum = require('checksum');
 
 interface StylesConfig {
   src: string;
@@ -17,59 +19,128 @@ interface StylesConfig {
 export function buildStyles(options: StylesConfig): void {
   const {src, out} = options;
   const scssFiles = path.join(src, '!(+(_))*.scss');
+
+  const iconsPromise = copyOcticons(out);
+
   glob(scssFiles, (err, scss) => {
     if (err) {
       return console.log(`failed to compile scss in ${src}: ${err}`);
     }
 
-    scss.forEach(f => compileScss(f, out));
-  });
+    resourceChecksum.load(src).then(checksums => {
+      const scssPromise = Promise.all(scss.map(f => compileScss(f, out, checksums)));
 
-  copyOcticons(out);
+      Promise.all([iconsPromise, scssPromise])
+        .then(() => {
+          return removeCSSWithNoSCSS(scss, out, checksums);
+        })
+        .then(() => {
+          resourceChecksum.save(checksums, src);
+        })
+        .catch(buildError => {
+          console.error(buildError);
+        });
+    });
+  });
 }
 
-function compileScss(file: string, out: string) {
-  console.log(`[scss]: ${file}`);
+function removeCSSWithNoSCSS(scssFiles: string[], cssRoot: string, checksums: CheckSumMap) {
+  return new Promise((resolve, reject) => {
+    glob(path.join(cssRoot, '*.css'), (err, cssFiles) => {
+      const cssBaseNames = cssFiles.map(css => path.basename(css, '.css'));
+      const scssBaseNames = scssFiles.map(scss => path.basename(scss, '.scss'));
 
+      resolve(Promise.all(cssBaseNames.map((css, i) => {
+        return new Promise((res, rej) => {
+          if (scssBaseNames.indexOf(css) === -1) {
+            const cssWithSuffix = `${css}.css`;
+            console.log(`[css]:[remove]:${cssWithSuffix}`);
+            fs.unlinkSync(cssFiles[i]);
+            delete checksums[cssWithSuffix];
+          }
+
+          resolve();
+        });
+      })));
+    });
+  });
+}
+
+function compileScss(file: string, out: string, checksums: CheckSumMap): Promise<string> {
   const basename = path.basename(file, '.scss');
   const outputFile = path.join(out, `${basename}.css`);
 
-  sass.render({
-    file,
-    sourceMap: false
-  }, (err, result) => {
-    if (err) {
-      return console.log(`failed to compile ${file}: ${err}`);
-    }
+  return new Promise((resolve, reject) => {
+    sass.render({
+      file,
+      sourceMap: false
+    }, (err, result) => {
+      if (err) {
+        return reject(`failed to compile ${file}: ${err}`);
+      }
 
-    const css = result.css.toString();
+      const css = result.css.toString();
 
-    postcss([autoprefixer({browsers: ['last 2 versions']}), cssnano])
-      .process(css)
-      .then(postResult => {
-        postResult.warnings().forEach(warn => {
-            console.warn(warn.toString());
-        });
+      postcss([autoprefixer({browsers: ['last 2 versions']}), cssnano])
+        .process(css)
+        .then(postResult => {
+          postResult.warnings().forEach(warn => {
+              console.warn(warn.toString());
+          });
 
-        fs.writeFile(outputFile, postResult.css.toString(), werr => {
-          if (werr) {
-            console.log(`faile to write css file: ${outputFile}: ${werr}`);
+          // do not write to file if output is identical to previous version
+          const productionCss = postResult.css.toString();
+          if (resourceChecksum.update(checksums, path.basename(outputFile), productionCss)) {
+            console.log(`[scss]:${file}`);
+
+            fs.writeFile(outputFile, productionCss, werr => {
+              if (werr) {
+                return reject(`faile to write css file: ${outputFile}: ${werr}`);
+              }
+
+              resolve(`${file} compiled`);
+            });
+          } else {
+            console.log(`[unchanged]:${file}`);
+            resolve(`${file} unchanged`);
           }
         });
-      });
+    });
   });
 }
 
 function copyOcticons(out) {
   const iconName = 'octicons';
   const iconFiles = ['woff', 'ttf', 'eot', 'svg'];
-  iconFiles.forEach(suffix => {
+
+  return Promise.all(iconFiles.map((suffix, idx) => {
     const filename = `${iconName}.${suffix}`;
-    ncp(path.join('node_modules/octicons/octicons', filename),
-    path.join(out, filename), err => {
-      if (err) {
-        return console.error(`failed to copy octicon: ${filename}`);
-      }
+    const src = path.join('node_modules/octicons/octicons', filename);
+    const dst = path.join(out, filename);
+
+    return new Promise((resolve, reject) => {
+      checksum.file(src, (srcErr, srcSum) => {
+        if (srcErr) {
+          return reject(`failed to calculate checksum for ${src}`);
+        }
+
+        checksum.file(dst, (dstErr, dstSum) => {
+          if (srcSum === dstSum) {
+            console.log(`[unchanged]:${filename}`);
+            return resolve(`${filename} unchanged`);
+          }
+
+          // copy on error or checksum diffs
+          ncp(src, dst, err => {
+            if (err) {
+              reject(`failed to copy octicon: ${filename}`);
+            } else {
+              console.log(`[icon]:${filename}`);
+              resolve(`${filename} copied`);
+            }
+          });
+        });
+      });
     });
-  });
+  }));
 }

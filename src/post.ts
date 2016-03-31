@@ -20,7 +20,7 @@ export function render(post: PostMetaData, options: RenderOption = {}): Promise<
       const footer = templates.renderFooter();
       html = renderPost(html, post);
 
-      console.log(`[post]:[rendered]: ${title}`);
+      console.log(`[post]:[rendered]:${title}`);
       return [header, html, footer].join('\n');
     });
 }
