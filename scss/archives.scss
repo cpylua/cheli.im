@@ -13,12 +13,14 @@
 .archives {
   margin-bottom: $section-margin;
 
-  .archive-link {
-    font-size: 16px;
-    
+  .post {
     &:not(:first-child) {
       margin-top: 8px;
     }
+  }
+
+  .archive-link {
+    font-size: 16px;
   }
 
   .archive-date {
