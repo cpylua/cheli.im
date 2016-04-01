@@ -31,7 +31,7 @@ export function renderFooter(config: FooterConfig = {}): string {
       <a href="/" class="ft-link">/index</a>
       <a href="/post/about" class="ft-link">/about</a>
     </div>
-    ${renderGA(appConfig.ga)}
+    ${appConfig.noga ? '' : renderGA(appConfig.ga)}
   </body>
 </html>
 `;

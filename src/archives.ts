@@ -31,7 +31,7 @@ ${statics.renderHeader({
   resources: styles
 })}
 ${renderArchive(posts)}
-${statics.renderFooter({noArchiveLink: true})}
+${statics.renderFooter()}
 `;
 
   checksum.file(indexFile, (checkSumError, sum) => {
