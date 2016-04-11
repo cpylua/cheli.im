@@ -10,6 +10,8 @@ interface FooterConfig {
 
 export function renderHeader(config: HeaderConfig): string {
   const {title, resources} = config;
+
+  // TODO: Is fav icons too long??
   return `
 <!DOCTYPE html>
 <html lang="en">
