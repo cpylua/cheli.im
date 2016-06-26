@@ -23,6 +23,10 @@ export function build(config: BuildConfig): void {
   checksum.load(src)
     .then(checksumMap => {
       glob(posts, (err, markdownFiles) => {
+        if (err) {
+          return console.error(`glob failed`);
+        }
+
         markdownFiles.forEach((file, i) => {
           fs.readFile(file, (readError, data) => {
             try {
