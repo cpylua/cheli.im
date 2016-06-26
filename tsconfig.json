@@ -14,9 +14,13 @@
   },
   "compileOnSave": true,
   "filesGlob": [
+    "node_modules/typescript/lib/lib.es6.d.ts",
+    "typings/index.d.ts",
     "src/**/*.ts"
   ],
   "files": [
+    "node_modules/typescript/lib/lib.es6.d.ts",
+    "typings/index.d.ts",
     "src/archives.ts",
     "src/checksum.ts",
     "src/index.ts",

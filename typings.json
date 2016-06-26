@@ -1,14 +1,14 @@
 {
-  "ambientDependencies": {
+  "globalDependencies": {
     "checksum": "registry:dt/checksum#0.1.1+20160317120654",
     "clean-css": "registry:dt/clean-css#3.4.9+20160316155526",
     "glob": "registry:dt/glob#5.0.10+20160317120654",
     "html-minifier": "registry:dt/html-minifier#1.1.1+20160316155526",
-    "isomorphic-fetch": "registry:dt/isomorphic-fetch#0.0.0+20160316155526",
+    "isomorphic-fetch": "registry:dt/isomorphic-fetch#0.0.0+20160524142046",
     "minimatch": "registry:dt/minimatch#2.0.8+20160317120654",
     "mkdirp": "registry:dt/mkdirp#0.3.0+20160317120654",
     "ncp": "registry:dt/ncp#0.5.1+20160316155526",
-    "node": "registry:dt/node#4.0.0+20160319033040",
+    "node": "registry:env/node#6.0.0+20160622202520",
     "node-sass": "registry:dt/node-sass#0.0.0+20160316155526",
     "relateurl": "registry:dt/relateurl#0.2.6+20160316155526",
     "rimraf": "registry:dt/rimraf#0.0.0+20160317120654",
