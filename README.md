@@ -41,21 +41,21 @@ Install
 config.json
 ----
 
-Create it in project root.
+Create it in project root. You can use `init-config.sh` to generate a skeleton.
 
-`posts` the root directory of your posts.
+`posts: string` the root directory of your posts. Use absolute path.
 
-`public`: the root directory of all generated files.
+`public: string`: the root directory of all generated files.
 
-`token` is your github api token,you can generate one in your github settings
+`token: string` is your github api token,you can generate one in your github settings
 page. You don't have to grant any special permissions to this token, it won't
 read you profile or repositories. It's better to set your own token, but it will
-work if you leave it blank(with a very low rate limit to the apis).
+work if you leave it blank(with a very low rate limit to the APIs).
 
-`author` is the default author name used in post. You may override it in
+`author: string` is the default author name used in posts. You may override it in
 individual posts.
 
-`ga` google analytics code
+`ga: string` google analytics code, empty to disable it.
 
 Usage
 ----
